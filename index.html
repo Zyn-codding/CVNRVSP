@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CVNRVSP VVIP</title>
+  <style>
+    body {
+      background: #000;
+      color: red;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+    .card {
+      max-width: 420px;
+      margin: auto;
+      background: rgba(255,255,255,0.05);
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.7);
+    }
+    .title {
+      font-size: 26px;
+      font-weight: bold;
+      color: #1e90ff; /* biru */
+      margin-bottom: 15px;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin-bottom: 15px;
+      text-align: center;
+      font-size: 16px;
+      color: black;
+    }
+    .btn {
+      display: inline-block;
+      margin: 8px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+      background: red;
+      color: white;
+    }
+    .notif {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 8px;
+      display: none;
+    }
+    .notif.show {
+      display: block;
+    }
+    .notif.success {
+      background: #064e3b;
+      color: #a7f3d0;
+    }
+    .notif.error {
+      background: #7f1d1d;
+      color: #fecaca;
+    }
+    .bug-options button {
+      background: #222;
+      color: red;
+      min-width: 150px;
+    }
+    .hidden {
+      display: none;
+    }
+    .devs {
+      font-weight: bold;
+      font-size: 22px;
+      margin-bottom: 20px;
+      background: linear-gradient(90deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00ab);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradient 5s linear infinite;
+      background-size: 400%;
+    }
+    @keyframes gradient {
+      0% {background-position: 0%;}
+      100% {background-position: 400%;}
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="loginCard">
+    <div class="title">CVNRVSP VVIP</div>
+    <h2 class="devs">DEVELOPERS ZYN</h2>
+    <h3>LOGIN</h3>
+    <input id="username" type="text" placeholder="USERNAME" />
+    <input id="password" type="password" placeholder="PASSWORD" />
+    <button class="btn" id="loginBtn">LOGIN</button>
+    <div id="loginNotif" class="notif"></div>
+  </div>
+
+  <div class="card hidden" id="mainCard">
+    <div class="title">CVNRVSP VVIP</div>
+    <h2 class="devs">DEVELOPERS ZYN</h2>
+    <h3>PANEL</h3>
+    <input id="targetNumber" type="text" placeholder="+628xx..." />
+    <button class="btn" id="sendBug">SEND BUG</button>
+
+    <h3>Jenis Bug?</h3>
+    <div class="bug-options">
+      <button class="btn" data-bug="INV CRASH">INV CRASH</button>
+      <button class="btn" data-bug="INV BLANK">INV BLANK</button>
+      <button class="btn" data-bug="ZYN BUGZ">ZYN BUGZ</button>
+      <button class="btn" data-bug="KIAMAT">KIAMAT</button>
+      <button class="btn" data-bug="TSUNAMI">TSUNAMI</button>
+      <button class="btn" data-bug="BASIC BUG">BASIC BUG</button>
+    </div>
+
+    <div id="mainNotif" class="notif"></div>
+  </div>
+
+  <script>
+    const usernameInput = document.getElementById("username");
+    const passwordInput = document.getElementById("password");
+    const loginBtn = document.getElementById("loginBtn");
+    const loginNotif = document.getElementById("loginNotif");
+    const loginCard = document.getElementById("loginCard");
+    const mainCard = document.getElementById("mainCard");
+
+    const targetNumber = document.getElementById("targetNumber");
+    const sendBugBtn = document.getElementById("sendBug");
+    const mainNotif = document.getElementById("mainNotif");
+
+    const rules = {
+      "62": { min: 10, max: 13 }, // Indonesia
+      "60": { min: 9,  max: 12 }, // Malaysia
+      "1":  { min: 10, max: 11 }, // USA/Canada
+      "91": { min: 10, max: 12 }, // India
+      "44": { min: 10, max: 12 }, // UK
+      "81": { min: 10, max: 12 }, // Japan
+      "65": { min: 8,  max: 11 }, // Singapore
+      "63": { min: 10, max: 12 }, // Philippines
+    };
+
+    function showNotif(el, message, type = "success") {
+      el.textContent = message;
+      el.className = "notif show " + type;
+      setTimeout(() => {
+        el.className = "notif";
+      }, 2500);
+    }
+
+    // LOGIN
+    loginBtn.addEventListener("click", () => {
+      const user = usernameInput.value.trim();
+      const pass = passwordInput.value.trim();
+      if (user === "CVN_KCK" && pass === "YESITSME") {
+        showNotif(loginNotif, "SUCCESSFULLY LOGIN WAITING...", "success");
+        setTimeout(() => {
+          loginCard.classList.add("hidden");
+          mainCard.classList.remove("hidden");
+        }, 10000); // 10 detik
+      } else {
+        showNotif(loginNotif, "YAHH SALAHH :(", "error");
+      }
+    });
+
+    // VALIDASI NOMOR
+    sendBugBtn.addEventListener("click", () => {
+      const phone = targetNumber.value.trim().replace(/^\+/, ""); 
+      if (!phone) {
+        showNotif(mainNotif, "ISI NOMOR DULU KOCAK", "error");
+        return;
+      }
+      if (/\D/.test(phone)) {
+        showNotif(mainNotif, "Nomor harus angka ❌", "error");
+        return;
+      }
+
+      if (phone.length > 17) {
+        showNotif(mainNotif, "[ kepanjangan brooo🤣 ]", "error");
+        return;
+      }
+
+      let found = false;
+      for (let code in rules) {
+        if (phone.startsWith(code)) {
+          found = true;
+          const { min, max } = rules[code];
+          const length = phone.length - code.length; 
+          if (length < min) {
+            showNotif(mainNotif, "Nomor terlalu pendek ❌", "error");
+          } else if (length > max) {
+            showNotif(mainNotif, "yah kocak kebanyakan woi 🤣", "error");
+          } else {
+            showNotif(mainNotif, "Nomor +" + phone + " berhasil dikirim ✅", "success");
+          }
+        }
+      }
+      if (!found) {
+        showNotif(mainNotif, "Kode negara tidak dikenal 🌍", "error");
+      }
+    });
+
+    // JENIS BUG
+    document.querySelectorAll(".bug-options .btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const bug = btn.getAttribute("data-bug");
+        showNotif(mainNotif, "BERHASIL MENJADI " + bug + " !", "success");
+      });
+    });
+  </script>
+</body>
+</html>
